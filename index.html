@@ -1,1 +1,80 @@
-Hello World
+<!DOCTYPE html>
+<html>
+<head>
+ <title>Small Game</title>
+ <style>
+    canvas {
+      border: 1px solid black;
+    }
+ </style>
+</head>
+<body>
+ <canvas id="gameCanvas" width="480" height="270"></canvas>
+ <script>
+    const canvas = document.getElementById('gameCanvas');
+    const ctx = canvas.getContext('2d');
+
+    // Player properties
+    let playerX = 100;
+    let playerY = 100;
+    let playerSpeed = 5;
+
+    // Obstacle properties
+    let obstacleX = 200;
+    let obstacleY = 200;
+    let obstacleSpeed = 3;
+
+    // Update game objects
+    function updateGameObjects() {
+      // Update player position
+      playerX += playerSpeed;
+
+      // Update obstacle position
+      obstacleX -= obstacleSpeed;
+
+      // Reset obstacle to the right when it goes off the screen
+      if (obstacleX + 50 < 0) {
+        obstacleX = canvas.width + 50;
+        obstacleY = Math.random() * (canvas.height - 50);
+      }
+    }
+
+    // Detect collision between player and obstacle
+    function checkCollision() {
+      const dx = playerX - obstacleX;
+      const dy = playerY - obstacleY;
+      const distance = Math.sqrt(dx * dx + dy * dy);
+
+      if (distance < 50) {
+        alert('Game Over');
+        location.reload();
+      }
+    }
+
+    // Draw game objects on the canvas
+    function drawGameObjects() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      // Draw player
+      ctx.fillStyle = 'blue';
+      ctx.fillRect(playerX, playerY, 50, 50);
+
+      // Draw obstacle
+      ctx.fillStyle = 'red';
+      ctx.fillRect(obstacleX, obstacleY, 50, 50);
+    }
+
+    // Main game loop
+    function gameLoop() {
+      updateGameObjects();
+      checkCollision();
+      drawGameObjects();
+
+      requestAnimationFrame(gameLoop);
+    }
+
+    // Start the game
+    gameLoop();
+ </script>
+</body>
+</html>
